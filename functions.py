@@ -1,7 +1,4 @@
-
-
-def get_git():
-    return which("git.exe") or which("git") 
+import subprocess
 
 def which(program):
     import os
@@ -21,3 +18,12 @@ def which(program):
 
     return None
 
+def get_git():
+    if hasattr(get_git, "_cache") is False:
+        setattr(get_git, "_cache", which("git.exe") or which("git"))
+    return getattr(get_git, "_cache")
+
+def git(*commands):
+    startupinfo = subprocess.STARTUPINFO()
+    startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+    return subprocess.call([get_git()] + list(commands), startupinfo = startupinfo)
