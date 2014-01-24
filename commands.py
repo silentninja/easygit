@@ -30,17 +30,19 @@ class AddThenCommitThenPushCommand(sublime_plugin.TextCommand):
                 return
             current_dir = os.path.dirname(current_file)
             os.chdir(current_dir)
-            exit_code = 0
-            exit_code |= git('add', current_file)
+            exit_code = git('add', current_file)
+            if exit_code is not 0:
+                sublime.error_message("Problem adding files, do it manually!")
+                return
             exit_code |= git('commit', '-m', str)
+            if exit_code is not 0:
+                sublime.error_message("Problem commiting files, do it manually!")
+                return
             exit_code |= git('push')
             if exit_code is not 0:
-                sublime.error_message(
-                    """
-                    There were some problems commiting and
-                    pushing your changes, please do it manually
-                    """
-                )
+                sublime.error_message("Problem pushing files, do it manually!")
+                return
+
 
         sublime.active_window().show_input_panel(
             "Write a short description of your recent changes (the commit message)",
