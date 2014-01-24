@@ -26,14 +26,21 @@ class AddThenCommitThenPushCommand(sublime_plugin.TextCommand):
             return sublime.error_message( ERROR_NOT_A_REPO )
 
         def on_done(str):
+            
             current_file = sublime.active_window().active_view().file_name()
-            if not current_file:
-                sublime.error_message( ERROR_NOT_VALID_VIEW )
-                return
             current_dir = os.path.dirname(current_file)
+
+            if not current_file:
+                return sublime.error_message( ERROR_NOT_VALID_VIEW )
+
+            if targeted == "file":
+                target = current_file
+            else:
+                target = "*"
+
             os.chdir(current_dir)
             
-            if git('add', current_file) is not 0:
+            if git('add', target) is not 0:
                 return sublime.error_message( ERROR_ADD )
                 
             if git('commit', '-m', str) is not 0:
