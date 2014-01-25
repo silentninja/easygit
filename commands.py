@@ -42,10 +42,8 @@ class AddThenCommitThenPushCommand(sublime_plugin.TextCommand):
             if current_view.is_dirty():
                 current_view.run_command('save')
 
-            status = git_output('status')
-            if status.find('nothing to commit') != -1:
+            if git_output('status').find('nothing to commit') != -1:
                 return sublime.message_dialog("Everything up to date!")
-
 
             os.chdir(current_dir)
             git('reset', 'HEAD', target)
