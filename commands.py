@@ -34,6 +34,7 @@ class AddThenCommitThenPushCommand(sublime_plugin.TextCommand):
             if not current_file:
                 return sublime.error_message( ERROR_NOT_VALID_VIEW )
 
+
             if targeted == "file":
                 target = current_file
             else:
