@@ -1,7 +1,7 @@
 
 
 import os, sublime, sublime_plugin
-from .functions import git
+from .functions import git, git_output
 
 ERROR_NOT_INSTALLED = 'Git is not installed on your computer, we need it!'
 ERROR_NOT_A_REPO = 'This folder is not a git repository! Make it one and try again'
@@ -27,7 +27,8 @@ class AddThenCommitThenPushCommand(sublime_plugin.TextCommand):
 
         def on_done(str):
             
-            current_file = sublime.active_window().active_view().file_name()
+            current_view = sublime.active_window().active_view()
+            current_file = current_view.file_name()
             current_dir = os.path.dirname(current_file)
 
             if not current_file:
@@ -36,9 +37,18 @@ class AddThenCommitThenPushCommand(sublime_plugin.TextCommand):
             if targeted == "file":
                 target = current_file
             else:
-                target = "*"
+                target = "."
+
+            if current_view.is_dirty():
+                current_view.run_command('save')
+
+            status = git_output('status')
+            if status.find('nothing to commit') != -1:
+                return sublime.message_dialog("Everything up to date!")
+
 
             os.chdir(current_dir)
+            git('reset', 'HEAD', target)
             
             if git('add', target) is not 0:
                 return sublime.error_message( ERROR_ADD )

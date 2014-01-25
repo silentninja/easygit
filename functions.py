@@ -1,4 +1,5 @@
 import subprocess
+from binascii import b2a_uu 
 
 def which(program):
     import os
@@ -27,3 +28,13 @@ def git(*commands):
     startupinfo = subprocess.STARTUPINFO()
     startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
     return subprocess.call([get_git()] + list(commands), startupinfo = startupinfo)
+
+def git_output(*commands):
+    startupinfo = subprocess.STARTUPINFO()
+    startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+    try:
+        result = subprocess.check_output([get_git()] + list(commands), startupinfo = startupinfo)
+        result = b2a_uu(result)
+    except:
+        result = ""
+    return result
