@@ -11,6 +11,7 @@
                         "caption": "This Repo",
                         "children":
                         [
+                        
                              { "caption": "Add, commit and push all!", "command": "add_then_commit_then_push", "args": {"targeted": "repo"} }
     
                             // ,{ "caption": "Graph", "command": "git_graph" }
