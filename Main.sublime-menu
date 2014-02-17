@@ -3,18 +3,9 @@
         "id": "file",
         "children":
         [
-            {
-                "caption": "Git",
-                "children":
-                [
-                    {
-                        "caption": "This Repo",
-                        "children":
-                        [
-                        
 
-                             { "caption": "Add, commit and push all!", "command": "add_then_commit_then_push", "args": {"targeted": "repo"} }
-    
+                    { "caption": "Easygit (add/commit/push all changes)", "command": "add_then_commit_then_push", "args": {"targeted": "repo"} }
+
                             // ,{ "caption": "Graph", "command": "git_graph" }
                             // ,{ "caption": "-" }
                             // ,{ "caption": "Diff", "command": "git_diff" }
@@ -32,17 +23,7 @@
                             // ,{ "caption": "Blame", "command": "git_blame" }
                             // ,{ "caption": "-" }
                             // ,{ "caption": "Toggle Annotations", "command": "git_toggle_annotations" }
-                        ]
-                    },
-                    {
-                        "caption": "This file",
-                        "children":
-                        [
-                            { "caption": "Add, commit and push all!", "command": "add_then_commit_then_push", "args": {"targeted": "file"} }
-                        ]
-                    }
-                ]
-            }
+
         ]
     }
 

@@ -19,6 +19,12 @@ class AddThenCommitThenPushCommand(sublime_plugin.TextCommand):
     #   spawn(git, ["status"])
     def run(self, args, targeted):
 
+        current_view = sublime.active_window().active_view()
+        current_file = current_view.file_name()
+        current_dir = os.path.dirname(current_file)
+
+        os.chdir(current_dir)
+
         if not git():
             return sublime.error_message( ERROR_NOT_INSTALLED )
 
@@ -26,14 +32,9 @@ class AddThenCommitThenPushCommand(sublime_plugin.TextCommand):
             return sublime.error_message( ERROR_NOT_A_REPO )
 
         def on_done(str):
-            
-            current_view = sublime.active_window().active_view()
-            current_file = current_view.file_name()
-            current_dir = os.path.dirname(current_file)
 
             if not current_file:
                 return sublime.error_message( ERROR_NOT_VALID_VIEW )
-
 
             if targeted == "file":
                 target = current_file
@@ -46,7 +47,6 @@ class AddThenCommitThenPushCommand(sublime_plugin.TextCommand):
             # if git_output('status').find('nothing to commit') != -1:
             #     return sublime.message_dialog("Everything up to date!")
 
-            os.chdir(current_dir)
             git('reset', 'HEAD', target)
             
             if git('add', target) is not 0:
@@ -57,6 +57,8 @@ class AddThenCommitThenPushCommand(sublime_plugin.TextCommand):
             
             if git('push') is not 0:
                 return sublime.error_message( ERROR_PUSH )
+
+            return sublime.message_dialog("Easy-Git Success!")
 
         sublime.active_window().show_input_panel(
             "Write a short description of your recent changes (the commit message)",
