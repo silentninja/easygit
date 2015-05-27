@@ -13,5 +13,7 @@ Key: 'ctrl+shift+.' Git add working file,commit and push
 ```
 
 ####Mac(OSX):
+```
 Key: 'super+shift+g' Git add all,commit and push
 Key: 'super+shift+.' Git add working file,commit and push
+```
