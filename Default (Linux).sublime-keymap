@@ -1,0 +1,5 @@
+[
+    {"command": "add_then_commit_then_push", "args": {"targeted": "all"}, "keys": ["ctrl+shift+g"]},
+    {"command": "add_then_commit_then_push", "args": {"targeted": "file"}, "keys": ["ctrl+shift+."]},
+
+]

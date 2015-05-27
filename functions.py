@@ -1,8 +1,10 @@
 import subprocess
-from binascii import b2a_uu 
+from binascii import b2a_uu
+import os
+
 
 def which(program):
-    import os
+
     def is_exe(fpath):
         return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
 
@@ -19,22 +21,35 @@ def which(program):
 
     return None
 
+
 def get_git():
     if hasattr(get_git, "_cache") is False:
         setattr(get_git, "_cache", which("git.exe") or which("git"))
     return getattr(get_git, "_cache")
 
+
 def git(*commands):
-    startupinfo = subprocess.STARTUPINFO()
-    startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-    return subprocess.call([get_git()] + list(commands), startupinfo = startupinfo)
+    kwargs = get_subprocess_kwargs()
+    return subprocess.call([get_git()] + list(commands), **kwargs)
+
 
 def git_output(*commands):
-    startupinfo = subprocess.STARTUPINFO()
-    startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
     try:
-        result = subprocess.check_output([get_git()] + list(commands), startupinfo = startupinfo)
+        kwargs = get_subprocess_kwargs()
+        result = subprocess.check_output(
+            [get_git()] + list(commands), **kwargs)
         result = b2a_uu(result)
     except:
         result = ""
     return result
+
+
+def get_subprocess_kwargs():
+    kwargs = {}
+    if os.name == 'nt':
+        errorlog = open(os.devnull, 'w')
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        kwargs["stderr"] = errorlog
+        kwargs["startupinfo"] = startupinfo
+    return kwargs

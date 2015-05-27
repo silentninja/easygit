@@ -1,6 +1,8 @@
 
 
-import os, sublime, sublime_plugin
+import os
+import sublime
+import sublime_plugin
 from .functions import git, git_output
 
 ERROR_NOT_INSTALLED = 'Git is not installed on your computer, we need it!'
@@ -13,12 +15,12 @@ ERROR_PUSH = "Problem pushing files, do it manually!"
 
 class AddThenCommitThenPushCommand(sublime_plugin.TextCommand):
     # exectue(git
-    #if spawn(git, ["status"]) == "Not a git repository"
+    # if spawn(git, ["status"]) == "Not a git repository"
     #   echo("this is not a yet a git repository, please make it one and try again")
-    #else:
+    # else:
     #   spawn(git, ["status"])
-    def run(self, args, targeted):
 
+    def run(self, args, targeted):
         current_view = sublime.active_window().active_view()
         current_file = current_view.file_name()
         current_dir = os.path.dirname(current_file)
@@ -26,37 +28,37 @@ class AddThenCommitThenPushCommand(sublime_plugin.TextCommand):
         os.chdir(current_dir)
 
         if not git():
-            return sublime.error_message( ERROR_NOT_INSTALLED )
+            return sublime.error_message(ERROR_NOT_INSTALLED)
 
         if git('status') is not 0:
-            return sublime.error_message( ERROR_NOT_A_REPO )
+            return sublime.error_message(ERROR_NOT_A_REPO)
 
         def on_done(str):
 
             if not current_file:
-                return sublime.error_message( ERROR_NOT_VALID_VIEW )
+                return sublime.error_message(ERROR_NOT_VALID_VIEW)
 
             if targeted == "file":
                 target = current_file
+            elif targeted == 'all':
+                target = '-A'
             else:
                 target = "."
-
             if current_view.is_dirty():
                 current_view.run_command('save')
 
             # if git_output('status').find('nothing to commit') != -1:
             #     return sublime.message_dialog("Everything up to date!")
 
-            git('reset', 'HEAD', target)
-            
+            # git('reset', 'HEAD', target)
             if git('add', target) is not 0:
-                return sublime.error_message( ERROR_ADD )
-                
+                return sublime.error_message(ERROR_ADD)
+
             if git('commit', '-m', str) is not 0:
-                return sublime.error_message( ERROR_COMMIT )
-            
+                return sublime.error_message(ERROR_COMMIT)
+
             if git('push') is not 0:
-                return sublime.error_message( ERROR_PUSH )
+                return sublime.error_message(ERROR_PUSH)
 
             return sublime.message_dialog("Easy-Git Success!")
 
@@ -66,5 +68,4 @@ class AddThenCommitThenPushCommand(sublime_plugin.TextCommand):
             on_done,
             lambda: 0,
             lambda: 0
-        )  
-
+        )
