@@ -6,13 +6,13 @@ Easygit
 ## Key-Bindings:
 
 
-####Linux and Windows:
+####Linux:
 ```
 Key: 'ctrl+shift+g' Git add all,commit and push
 Key: 'ctrl+shift+.' Git add working file,commit and push
 ```
 
-####Mac(OSX):
+####Mac(OSX) and Windows:
 ```
 Key: 'super+shift+g' Git add all,commit and push
 Key: 'super+shift+.' Git add working file,commit and push
