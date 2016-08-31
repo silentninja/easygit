@@ -3,7 +3,8 @@
 import os
 import sublime
 import sublime_plugin
-from .functions import git, git_output
+from .functions import git, git_output, call_git
+from subprocess import CalledProcessError
 
 ERROR_NOT_INSTALLED = 'Git is not installed on your computer, we need it!'
 ERROR_NOT_A_REPO = 'This folder is not a git repository! Make it one and try again'
@@ -27,10 +28,11 @@ class AddThenCommitThenPushCommand(sublime_plugin.TextCommand):
 
         os.chdir(current_dir)
 
-        if not git():
+        if not call_git():
             return sublime.error_message(ERROR_NOT_INSTALLED)
-
-        if git('status') is not 0:
+        try:
+            git('status')
+        except Exception as e:
             return sublime.error_message(ERROR_NOT_A_REPO)
 
         def on_done(str):
@@ -51,16 +53,14 @@ class AddThenCommitThenPushCommand(sublime_plugin.TextCommand):
             #     return sublime.message_dialog("Everything up to date!")
 
             # git('reset', 'HEAD', target)
-            if git('add', target) is not 0:
-                return sublime.error_message(ERROR_ADD)
-
-            if git('commit', '-m', str) is not 0:
-                return sublime.error_message(ERROR_COMMIT)
-
-            if git('push') is not 0:
-                return sublime.error_message(ERROR_PUSH)
-
-            return sublime.message_dialog("Easy-Git Success!")
+            try:
+                git('add', target)
+                git('commit', '-m', str)
+                git('push')
+                return sublime.message_dialog("Easy-Git Success!")
+            except CalledProcessError as e:
+                sublime.error_message("Error when performing: " + ' '.join(
+                    e.cmd) + "\n Error Message: " + e.output.decode("utf-8"))
 
         sublime.active_window().show_input_panel(
             "Write a short description of your recent changes (the commit message)",

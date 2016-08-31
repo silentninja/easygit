@@ -30,6 +30,12 @@ def get_git():
 
 def git(*commands):
     kwargs = get_subprocess_kwargs()
+    subprocess.check_output(
+        [get_git()] + list(commands), stderr=subprocess.STDOUT, **kwargs).decode("utf-8")
+
+
+def call_git(*commands):
+    kwargs = get_subprocess_kwargs()
     return subprocess.call([get_git()] + list(commands), **kwargs)
 
 
