@@ -30,9 +30,7 @@ class AddThenCommitThenPushCommand(sublime_plugin.TextCommand):
 
         if not call_git():
             return sublime.error_message(ERROR_NOT_INSTALLED)
-        try:
-            git('status')
-        except Exception as e:
+        if call_git('status') is not 0:
             return sublime.error_message(ERROR_NOT_A_REPO)
 
         def on_done(str):
