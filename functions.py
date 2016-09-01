@@ -56,6 +56,5 @@ def get_subprocess_kwargs():
         errorlog = open(os.devnull, 'w')
         startupinfo = subprocess.STARTUPINFO()
         startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-        kwargs["stderr"] = errorlog
         kwargs["startupinfo"] = startupinfo
     return kwargs
