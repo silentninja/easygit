@@ -1,6 +1,6 @@
 Easygit
 =======
-
+## THIS PROJECT IS NOT MAINTAINED ANYMORE. You are free to fork it and start a new project.
 <img src="http://i.imgur.com/fO4RbUM.jpg" />
 
 ## Key-Bindings:
